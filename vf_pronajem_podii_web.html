@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VF pronájem pódií</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-soft: #1e293b;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-light: #e5e7eb;
+      --accent: #f59e0b;
+      --accent-dark: #d97706;
+      --line: #dbe4ee;
+      --shadow: 0 15px 40px rgba(0,0,0,.18);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, rgba(15,23,42,.95), rgba(30,41,59,.92)),
+        url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1600&q=80') center/cover;
+      color: white;
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      background: rgba(15,23,42,.88);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      color: white;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .menu {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .menu a {
+      color: #f8fafc;
+      font-weight: 600;
+      transition: .2s ease;
+    }
+
+    .menu a:hover {
+      color: var(--accent);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 40px;
+      align-items: center;
+      padding: 64px 0;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.3rem, 5vw, 4.5rem);
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 650px;
+      color: #dbeafe;
+      margin-bottom: 28px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: .2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #111827;
+    }
+
+    .btn-primary:hover {
+      background: #fbbf24;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      border: 2px solid rgba(255,255,255,.35);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,.08);
+    }
+
+    .hero-card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card h2 {
+      font-size: 1.35rem;
+      margin-bottom: 14px;
+    }
+
+    .hero-card ul {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      color: #f8fafc;
+    }
+
+    .hero-card li::before {
+      content: '✔';
+      color: var(--accent);
+      margin-right: 10px;
+      font-weight: 700;
+    }
+
+    section {
+      padding: 80px 0;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 42px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+
+    .section-heading p {
+      color: #475569;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .about-card,
+    .form-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .about-text h3 {
+      font-size: 1.8rem;
+      margin-bottom: 18px;
+    }
+
+    .about-text p {
+      color: #334155;
+      margin-bottom: 14px;
+    }
+
+    .about-info {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .info-box {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      padding: 16px;
+      border-radius: 16px;
+      font-weight: 700;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .gallery-item {
+      background: white;
+      padding: 12px;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      transition: transform .2s ease;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-6px);
+    }
+
+    .gallery-item p {
+      padding: 14px 6px 4px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .reservation-wrap {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .reservation-info {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: white;
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .reservation-info h3 {
+      font-size: 1.7rem;
+      margin-bottom: 16px;
+    }
+
+    .reservation-info p {
+      color: #cbd5e1;
+      margin-bottom: 14px;
+    }
+
+    .reservation-info ul {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .reservation-info li::before {
+      content: '•';
+      color: var(--accent);
+      font-size: 1.4rem;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      font: inherit;
+      background: #fff;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: 3px solid rgba(245,158,11,.22);
+      border-color: var(--accent);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    footer {
+      background: #0f172a;
+      color: #cbd5e1;
+      text-align: center;
+      padding: 28px 16px;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .about,
+      .reservation-wrap,
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .menu {
+        gap: 12px;
+        font-size: .95rem;
+      }
+
+      .form-row,
+      .about-info,
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card,
+      .about-card,
+      .form-card,
+      .reservation-info {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="container nav-inner">
+      <div class="logo">VF <span>pronájem pódií</span></div>
+      <div class="menu">
+        <a href="#o-mne">O mně</a>
+        <a href="#galerie">Galerie</a>
+        <a href="#rezervace">Rezervace</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <div class="container hero">
+      <div>
+        <h1>VF pronájem pódií</h1>
+        <p>
+          Profesionální pronájem mobilních pódií pro koncerty, festivaly,
+          městské akce, firemní eventy i soukromé oslavy. Spolehlivost,
+          bezpečnost a individuální přístup ke každé akci.
+        </p>
+        <div class="hero-buttons">
+          <a class="btn btn-primary" href="#rezervace">Rezervovat termín</a>
+          <a class="btn btn-secondary" href="#galerie">Zobrazit galerii</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <h2>Proč právě VF?</h2>
+        <ul>
+          <li>Moderní a bezpečné pódiové konstrukce</li>
+          <li>Rychlá domluva a flexibilní termíny</li>
+          <li>Doprava, montáž i demontáž</li>
+          <li>Řešení pro malé i velké akce</li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="o-mne">
+      <div class="container">
+        <div class="section-heading">
+          <h2>O mně</h2>
+          <p>
+            Za projektem VF pronájem pódií stojí důraz na kvalitu, spolehlivost a
+            férový přístup. Pomáhám pořadatelům vytvořit bezpečné a reprezentativní
+            zázemí pro každou akci.
+          </p>
+        </div>
+
+        <div class="about">
+          <div class="about-card about-text">
+            <h3>Spolehlivý partner pro vaše eventy</h3>
+            <p>
+              Specializuji se na pronájem pódií a technického zázemí pro kulturní,
+              společenské i firemní akce. Každou realizaci řeším individuálně podle
+              velikosti prostoru, typu programu a vašich požadavků.
+            </p>
+            <p>
+              Mým cílem je dodat řešení, které bude nejen funkční a bezpečné, ale i
+              vizuálně profesionální. Od prvního kontaktu až po samotnou realizaci
+              kladu důraz na komunikaci a hladký průběh akce.
+            </p>
+
+            <div class="about-info">
+              <div class="info-box">Individuální přístup</div>
+              <div class="info-box">Bezpečná konstrukce</div>
+              <div class="info-box">Rychlá montáž</div>
+              <div class="info-box">Zkušenosti z praxe</div>
+            </div>
+          </div>
+
+          <div class="about-card">
+            <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1200&q=80" alt="Pódium na venkovní akci" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="galerie">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Galerie</h2>
+          <p>
+            Ukázky realizací pro koncerty, festivaly, městské slavnosti i soukromé eventy.
+          </p>
+        </div>
+
+        <div class="gallery-grid">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1200&q=80" alt="Koncertní pódium" />
+            <p>Koncertní pódium</p>
+          </div>
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1200&q=80" alt="Hudební festival" />
+            <p>Hudební festival</p>
+          </div>
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80" alt="Firemní event" />
+            <p>Firemní event</p>
+          </div>
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80" alt="Venkovní akce" />
+            <p>Venkovní akce</p>
+          </div>
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1464375117522-1311dd7d0b5e?auto=format&fit=crop&w=1200&q=80" alt="Pódium se světly" />
+            <p>Pódium se světly</p>
+          </div>
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=1200&q=80" alt="Večerní produkce" />
+            <p>Večerní produkce</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rezervace">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Rezervační formulář</h2>
+          <p>
+            Pošlete nezávaznou poptávku a připravím vám nabídku podle typu akce,
+            termínu a velikosti pódia.
+          </p>
+        </div>
+
+        <div class="reservation-wrap">
+          <div class="reservation-info">
+            <h3>Jak to probíhá?</h3>
+            <p>
+              Vyplníte formulář, já se vám ozvu s dostupností termínu a připravím
+              orientační cenovou nabídku.
+            </p>
+            <ul>
+              <li>Nezávazná poptávka zdarma</li>
+              <li>Rychlá odpověď na váš termín</li>
+              <li>Možnost individuálního řešení akce</li>
+              <li>Doprava a montáž po domluvě</li>
+            </ul>
+          </div>
+
+          <div class="form-card">
+            <form>
+              <div class="form-row">
+                <div>
+                  <label for="name">Jméno a příjmení</label>
+                  <input type="text" id="name" name="name" placeholder="Vaše jméno" required />
+                </div>
+                <div>
+                  <label for="phone">Telefon</label>
+                  <input type="tel" id="phone" name="phone" placeholder="+420 ..." required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div>
+                  <label for="email">E-mail</label>
+                  <input type="email" id="email" name="email" placeholder="vas@email.cz" required />
+                </div>
+                <div>
+                  <label for="date">Datum akce</label>
+                  <input type="date" id="date" name="date" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div>
+                  <label for="type">Typ akce</label>
+                  <select id="type" name="type">
+                    <option>Koncert</option>
+                    <option>Festival</option>
+                    <option>Firemní akce</option>
+                    <option>Městská slavnost</option>
+                    <option>Soukromá akce</option>
+                    <option>Jiné</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="city">Místo konání</label>
+                  <input type="text" id="city" name="city" placeholder="Město / obec" />
+                </div>
+              </div>
+
+              <div>
+                <label for="message">Podrobnosti o akci</label>
+                <textarea id="message" name="message" placeholder="Napište požadovaný rozměr pódia, předpokládaný počet návštěvníků, čas montáže apod."></textarea>
+              </div>
+
+              <button class="btn btn-primary" type="submit">Odeslat poptávku</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 VF pronájem pódií. Všechna práva vyhrazena.</p>
+    </div>
+  </footer>
+</body>
+</html>
